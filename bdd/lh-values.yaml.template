@@ -1,3 +1,8 @@
 # Disable the existing lighthouse-jx-controller in Lighthouse for the moment
 engines:
   jx: false
+
+# Specifying environment variable for link to build reports
+env:
+  JX_DEFAULT_IMAGE: ""
+  LIGHTHOUSE_REPORT_URL_BASE: "https://example.com"
