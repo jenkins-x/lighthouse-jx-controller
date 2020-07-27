@@ -40,7 +40,7 @@ spec:
             value: {{ quote $pval }}
 {{- end }}
 {{- end }}
-{{- with .Values.tektoncontroller.resources }}
+{{- with .Values.jxcontroller.resources }}
         resources:
 {{ toYaml . | indent 12 }}
 {{- end }}
