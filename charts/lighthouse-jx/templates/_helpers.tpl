@@ -13,6 +13,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{- define "jxcontroller.name" -}}
-{{- $name := default "-controller" .Values.jxcontroller.nameOverride -}}
+{{- $name := default "controller" .Values.jxcontroller.nameOverride -}}
 {{- printf "%s-%s" .Chart.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
