@@ -5,7 +5,7 @@ require (
 	github.com/google/go-cmp v0.4.1
 	github.com/jenkins-x/go-scm v1.5.150 // indirect
 	github.com/jenkins-x/jx-api v0.0.13
-	github.com/jenkins-x/jx/v2 v2.1.114
+	github.com/jenkins-x/jx/v2 v2.1.115
 	github.com/jenkins-x/lighthouse v0.0.690
 	github.com/jenkins-x/lighthouse-config v0.0.9
 	github.com/pkg/errors v0.9.1
