@@ -1,0 +1,28 @@
+# Default values for Go projects.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  parentRepository: gcr.io/jenkinsxio
+  tag: 0.0.64
+  pullPolicy: IfNotPresent
+
+# define environment variables here as a map of key: value
+env:
+  JX_DEFAULT_IMAGE: ""
+
+jxcontroller:
+  replicaCount: 1
+  image:
+    repository: "{{ .Values.image.parentRepository }}/lighthouse-jx-controller"
+    tag: "{{ .Values.image.tag }}"
+    pullPolicy: "{{ .Values.image.pullPolicy }}"
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 80m
+      memory: 128Mi
+  terminationGracePeriodSeconds: 180
+
+logFormat: "json"

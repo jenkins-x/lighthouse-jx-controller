@@ -1,0 +1,4 @@
+image:
+  parentRepository: gcr.io/jenkinsxio
+  tag: $VERSION
+  pullPolicy: IfNotPresent

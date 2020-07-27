@@ -1,0 +1,3 @@
+# Disable the existing lighthouse-jx-controller in Lighthouse for the moment
+engines:
+  jx: false
