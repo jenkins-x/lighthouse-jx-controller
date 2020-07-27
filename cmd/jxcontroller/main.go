@@ -9,12 +9,12 @@ import (
 
 	jxclient "github.com/jenkins-x/jx-api/pkg/client/clientset/versioned"
 	jxinformers "github.com/jenkins-x/jx-api/pkg/client/informers/externalversions"
+	"github.com/jenkins-x/lighthouse-jx-controller/pkg/engines/jx"
 	clientset "github.com/jenkins-x/lighthouse/pkg/client/clientset/versioned"
 	lhinformers "github.com/jenkins-x/lighthouse/pkg/client/informers/externalversions"
 	"github.com/jenkins-x/lighthouse/pkg/clients"
 	"github.com/jenkins-x/lighthouse/pkg/interrupts"
 	"github.com/jenkins-x/lighthouse/pkg/logrusutil"
-	"github.com/jenkins-x/lighthouse-jx-controller/pkg/engines/jx"
 	"github.com/sirupsen/logrus"
 	"k8s.io/client-go/kubernetes"
 )
