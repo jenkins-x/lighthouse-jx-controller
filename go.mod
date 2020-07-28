@@ -3,15 +3,13 @@ module github.com/jenkins-x/lighthouse-jx-controller
 require (
 	github.com/evanphx/json-patch v4.5.0+incompatible
 	github.com/google/go-cmp v0.4.1
-	github.com/jenkins-x/go-scm v1.5.150 // indirect
 	github.com/jenkins-x/jx-api v0.0.13
 	github.com/jenkins-x/jx/v2 v2.1.115
-	github.com/jenkins-x/lighthouse v0.0.690
+	github.com/jenkins-x/lighthouse v0.0.692
 	github.com/jenkins-x/lighthouse-config v0.0.9
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.6.1
-	github.com/tektoncd/pipeline v0.14.2 // indirect
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1
 	k8s.io/apimachinery v0.18.1
 	k8s.io/client-go v11.0.1-0.20190805182717-6502b5e7b1b5+incompatible
