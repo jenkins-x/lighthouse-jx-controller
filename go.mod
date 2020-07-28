@@ -4,7 +4,7 @@ require (
 	github.com/evanphx/json-patch v4.5.0+incompatible
 	github.com/google/go-cmp v0.4.1
 	github.com/jenkins-x/jx-api v0.0.13
-	github.com/jenkins-x/jx/v2 v2.1.115
+	github.com/jenkins-x/jx/v2 v2.1.120
 	github.com/jenkins-x/lighthouse v0.0.692
 	github.com/jenkins-x/lighthouse-config v0.0.9
 	github.com/pkg/errors v0.9.1
