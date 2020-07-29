@@ -659,6 +659,7 @@ github.com/gorilla/securecookie v1.1.1 h1:miw7JPhV+b/lAHSXz4qd/nN9jRiAFV5FwjeKyC
 github.com/gorilla/securecookie v1.1.1/go.mod h1:ra0sb63/xPlUeL+yeDciTfxMRAA+MP+HVt/4epWDjd4=
 github.com/gorilla/sessions v1.1.3 h1:uXoZdcdA5XdXF3QzuSlheVRUvjl+1rKY7zBXL68L9RU=
 github.com/gorilla/sessions v1.1.3/go.mod h1:8KCfur6+4Mqcc6S0FEfKuN15Vl5MgXW92AE8ovaJD0w=
+github.com/gorilla/sessions v1.2.0 h1:S7P+1Hm5V/AT9cjEcUD5uDaQSX0OE577aCXgoaKpYbQ=
 github.com/gorilla/sessions v1.2.0/go.mod h1:dk2InVEVJ0sfLlnXv9EAgkf6ecYs/i80K/zI+bUmuGM=
 github.com/gorilla/websocket v0.0.0-20170926233335-4201258b820c/go.mod h1:E7qHFY5m1UJ88s3WnNqhKjPHQ0heANvMoAMk2YaljkQ=
 github.com/gorilla/websocket v1.2.0/go.mod h1:E7qHFY5m1UJ88s3WnNqhKjPHQ0heANvMoAMk2YaljkQ=
@@ -848,6 +849,8 @@ github.com/jenkins-x/jx/v2 v2.1.120 h1:IetNYg8ul9jS2LSjUcmTp6NcXFBGLQQ6GjUnZqiXP
 github.com/jenkins-x/jx/v2 v2.1.120/go.mod h1:7C7unH+NYBRn+jbj5wBosjZvmB1Xo47Cg82ZeehNOMg=
 github.com/jenkins-x/lighthouse v0.0.692 h1:v99MmHN21hlhaUay71rAifKWBmT+nPNVdh2rJ9y6K+U=
 github.com/jenkins-x/lighthouse v0.0.692/go.mod h1:VGr4O2XStvrLzH4LeCLJk7PCZjLNYtj4yTWMKr3RjIU=
+github.com/jenkins-x/lighthouse v0.0.693 h1:wG9wEOA4yehzNVCBuSlWjhDD48HphiBUnibz9saEvWM=
+github.com/jenkins-x/lighthouse v0.0.693/go.mod h1:ZdPDSnkMwwsEG1+XqLCj/xTgWTIxiLPa/+/4cVHhzQ0=
 github.com/jenkins-x/lighthouse-config v0.0.6 h1:s73GxzEaqsqn/9w+VnkPKLx4lSs450PMgk4rpCioOm0=
 github.com/jenkins-x/lighthouse-config v0.0.6/go.mod h1:5ax5UF79SGM+Xc3HrWR/9LsPQBWDxE+TEJMwPAikst8=
 github.com/jenkins-x/lighthouse-config v0.0.9 h1:ETrBU3CcKpevh2d55tD/dBW0grQi2BlK+Lk9pnOUxq8=
