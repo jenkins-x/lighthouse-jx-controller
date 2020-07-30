@@ -4,7 +4,7 @@ require (
 	github.com/evanphx/json-patch v4.5.0+incompatible
 	github.com/google/go-cmp v0.4.1
 	github.com/jenkins-x/jx-api v0.0.13
-	github.com/jenkins-x/jx/v2 v2.1.120
+	github.com/jenkins-x/jx/v2 v2.1.121
 	github.com/jenkins-x/lighthouse v0.0.695
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.6.0
@@ -12,7 +12,6 @@ require (
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1
 	k8s.io/apimachinery v0.18.1
 	k8s.io/client-go v11.0.1-0.20190805182717-6502b5e7b1b5+incompatible
-	knative.dev/serving v0.16.0 // indirect
 	sigs.k8s.io/yaml v1.2.0
 )
 
