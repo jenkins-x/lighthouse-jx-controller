@@ -10,6 +10,7 @@ metadata:
     repository: lighthouse
   name: jenkins-x-lighthouse-pr-813-1
   namespace: jx
+  resourceVersion: '1'
 spec:
   batchPipelineActivity: {}
   build: "1"

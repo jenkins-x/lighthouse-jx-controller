@@ -1,41 +1,38 @@
 package jx
 
 import (
-	"context"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
 	"testing"
-	"time"
 
 	"github.com/google/go-cmp/cmp"
 	jxv1 "github.com/jenkins-x/jx-api/pkg/apis/jenkins.io/v1"
 	jxclient "github.com/jenkins-x/jx-api/pkg/client/clientset/versioned"
 	jxfake "github.com/jenkins-x/jx-api/pkg/client/clientset/versioned/fake"
-	jxinformers "github.com/jenkins-x/jx-api/pkg/client/informers/externalversions"
 	"github.com/jenkins-x/jx/v2/pkg/gits"
 	"github.com/jenkins-x/jx/v2/pkg/kube"
 	"github.com/jenkins-x/jx/v2/pkg/tekton"
 	"github.com/jenkins-x/jx/v2/pkg/tekton/metapipeline"
 	"github.com/jenkins-x/jx/v2/pkg/util"
-	"github.com/jenkins-x/lighthouse/pkg/apis/lighthouse/v1alpha1"
-	"github.com/jenkins-x/lighthouse/pkg/client/clientset/versioned/fake"
-	lhinformers "github.com/jenkins-x/lighthouse/pkg/client/informers/externalversions"
+	lighthousev1alpha1 "github.com/jenkins-x/lighthouse/pkg/apis/lighthouse/v1alpha1"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/tools/cache"
+	"k8s.io/apimachinery/pkg/types"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/yaml"
 )
 
 type fakeMetapipelineClient struct {
 	jxClient jxclient.Interface
-
-	ns string
+	client   client.Client
+	ns       string
 }
 
 // Create just creates a PipelineActivity key
@@ -67,10 +64,11 @@ func (f *fakeMetapipelineClient) Create(param metapipeline.PipelineCreateParam) 
 
 // Apply just applies the PipelineActivity
 func (f *fakeMetapipelineClient) Apply(pipelineActivity kube.PromoteStepActivityKey, crds tekton.CRDWrapper) error {
-	_, _, err := pipelineActivity.GetOrCreate(f.jxClient, f.ns)
+	activity, _, err := pipelineActivity.GetOrCreate(f.jxClient, f.ns)
 	if err != nil {
 		return err
 	}
+	f.client.Create(nil, activity)
 	return nil
 }
 
@@ -79,7 +77,7 @@ func (f *fakeMetapipelineClient) Close() error {
 	return nil
 }
 
-func TestSyncHandler(t *testing.T) {
+func TestReconcile(t *testing.T) {
 	origBase := os.Getenv(baseTargetURLEnvVar)
 	origTeam := os.Getenv(targetURLTeamEnvVar)
 	os.Setenv(baseTargetURLEnvVar, "https://example.com")
@@ -96,121 +94,89 @@ func TestSyncHandler(t *testing.T) {
 			os.Unsetenv(targetURLTeamEnvVar)
 		}
 	}()
-	testCases := []struct {
-		name       string
-		inputIsJob bool
-	}{
-		{
-			name:       "start-pullrequest",
-			inputIsJob: true,
-		},
-		{
-			name:       "update-job",
-			inputIsJob: false,
-		},
-		{
-			name:       "no-job-for-activity",
-			inputIsJob: false,
-		},
+	testCases := []string{
+		"start-pullrequest",
+		"update-job",
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			testData := path.Join("test_data", "controller", tc.name)
+		t.Run(tc, func(t *testing.T) {
+			testData := path.Join("test_data", "controller", tc)
 			_, err := os.Stat(testData)
 			assert.NoError(t, err)
 
+			// load observed state
+			ns := "jx"
 			observedActivity, err := loadPipelineActivity(true, testData)
 			assert.NoError(t, err)
 			observedJob, err := loadLighthouseJob(true, testData)
 			assert.NoError(t, err)
+			var state []runtime.Object
+			if observedActivity != nil {
+				state = append(state, observedActivity)
+			}
+			if observedJob != nil {
+				state = append(state, observedJob)
+			}
+			var jxObjects []runtime.Object
+			if observedActivity != nil {
+				jxObjects = append(jxObjects, observedActivity)
+			}
 
+			// load expected state
 			expectedActivity, err := loadPipelineActivity(false, testData)
 			assert.NoError(t, err)
 			expectedJob, err := loadLighthouseJob(false, testData)
 			assert.NoError(t, err)
 
-			ns := "jx"
-			var jxObjects []runtime.Object
-			if observedActivity != nil {
-				jxObjects = append(jxObjects, observedActivity)
-			}
-			var lhObjects []runtime.Object
-			if observedJob != nil {
-				lhObjects = append(lhObjects, observedJob)
-			}
-
+			// create fake controller
+			scheme := runtime.NewScheme()
+			err = lighthousev1alpha1.AddToScheme(scheme)
+			assert.NoError(t, err)
+			err = jxv1.AddToScheme(scheme)
+			assert.NoError(t, err)
+			c := fake.NewFakeClientWithScheme(scheme, state...)
 			jxClient := jxfake.NewSimpleClientset(jxObjects...)
-			lhClient := fake.NewSimpleClientset(lhObjects...)
-
-			lhInformerFactory := lhinformers.NewSharedInformerFactoryWithOptions(lhClient, time.Minute*30, lhinformers.WithNamespace(ns))
-
-			lhInformer := lhInformerFactory.Lighthouse().V1alpha1().LighthouseJobs()
-			lhLister := lhInformer.Lister()
-
-			jxInformerFactory := jxinformers.NewSharedInformerFactoryWithOptions(jxClient, time.Minute*30, jxinformers.WithNamespace(ns))
-
-			jxInformer := jxInformerFactory.Jenkins().V1().PipelineActivities()
-			jxLister := jxInformer.Lister()
-
-			stopCh := context.Background().Done()
-
-			jxInformerFactory.Start(stopCh)
-			lhInformerFactory.Start(stopCh)
-
-			if ok := cache.WaitForCacheSync(stopCh, lhInformer.Informer().HasSynced, jxInformer.Informer().HasSynced); !ok {
-				t.Fatalf("caches never synced")
-			}
 			mpc := &fakeMetapipelineClient{
 				jxClient: jxClient,
+				client:   c,
 				ns:       ns,
 			}
-
-			controller := &Controller{
-				jxClient:       jxClient,
-				lhClient:       lhClient,
-				mpClient:       mpc,
-				activityLister: jxLister,
-				lhLister:       lhLister,
-				logger:         logrus.NewEntry(logrus.StandardLogger()).WithField("controller", controllerName),
-				ns:             ns,
-			}
-
-			var key string
-			if tc.inputIsJob {
-				if observedJob != nil {
-					key, err = toKey(observedJob)
-				} else {
-					t.Fatal("Expected an observed LighthouseJob but none loaded from observed-lhjob.yml")
-				}
-			} else {
-				if observedActivity != nil {
-					key, err = toKey(observedActivity)
-				} else {
-					t.Fatal("Expected an observed PipelineActivity but none was loaded from observed-activity.yml")
-				}
-			}
+			reconciler, err := NewLighthouseJobReconciler(c, scheme, ns, mpc)
 			assert.NoError(t, err)
-			err = controller.syncHandler(key)
+
+			// invoke reconcile
+			jobName := "dummy"
+			if observedJob != nil {
+				jobName = observedJob.GetName()
+			}
+			_, err = reconciler.Reconcile(ctrl.Request{
+				NamespacedName: types.NamespacedName{
+					Namespace: ns,
+					Name:      jobName,
+				},
+			})
 			assert.NoError(t, err)
 
 			if expectedActivity != nil {
-				activities, err := jxClient.JenkinsV1().PipelineActivities(ns).List(metav1.ListOptions{})
+				var pipelineActivityList jxv1.PipelineActivityList
+				err := c.List(nil, &pipelineActivityList, client.InNamespace(ns))
 				assert.NoError(t, err)
-				assert.Len(t, activities.Items, 1)
-				updatedActivity := activities.Items[0].DeepCopy()
+				assert.Len(t, pipelineActivityList.Items, 1)
+				updatedActivity := pipelineActivityList.Items[0].DeepCopy()
 				if d := cmp.Diff(expectedActivity, updatedActivity); d != "" {
 					t.Errorf("PipelineActivity did not match expected: %s", d)
 				}
 			}
 			if expectedJob != nil {
-				jobs, err := lhClient.LighthouseV1alpha1().LighthouseJobs(ns).List(metav1.ListOptions{})
+				var jobList lighthousev1alpha1.LighthouseJobList
+				err := c.List(nil, &jobList, client.InNamespace(ns))
 				assert.NoError(t, err)
-				assert.Len(t, jobs.Items, 1)
+				assert.Len(t, jobList.Items, 1)
 				// Ignore status.starttime since that's always going to be different
-				updatedJob := jobs.Items[0].DeepCopy()
+				updatedJob := jobList.Items[0].DeepCopy()
 				updatedJob.Status.StartTime = metav1.Time{}
-				if d := cmp.Diff(expectedJob, updatedJob); d != "" {
+				if d := cmp.Diff(expectedJob.Status, updatedJob.Status); d != "" {
 					t.Errorf("LighthouseJob did not match expected: %s", d)
 				}
 			}
@@ -218,7 +184,7 @@ func TestSyncHandler(t *testing.T) {
 	}
 }
 
-func loadLighthouseJob(isObserved bool, dir string) (*v1alpha1.LighthouseJob, error) {
+func loadLighthouseJob(isObserved bool, dir string) (*lighthousev1alpha1.LighthouseJob, error) {
 	var baseFn string
 	if isObserved {
 		baseFn = "observed-lhjob.yml"
@@ -231,7 +197,7 @@ func loadLighthouseJob(isObserved bool, dir string) (*v1alpha1.LighthouseJob, er
 		return nil, err
 	}
 	if exists {
-		lhjob := &v1alpha1.LighthouseJob{}
+		lhjob := &lighthousev1alpha1.LighthouseJob{}
 		data, err := ioutil.ReadFile(fileName)
 		if err != nil {
 			return nil, err
