@@ -24,6 +24,7 @@ import (
 	lhinformers "github.com/jenkins-x/lighthouse/pkg/client/informers/externalversions/lighthouse/v1alpha1"
 	lhlisters "github.com/jenkins-x/lighthouse/pkg/client/listers/lighthouse/v1alpha1"
 	"github.com/jenkins-x/lighthouse/pkg/config"
+	"github.com/jenkins-x/lighthouse/pkg/config/job"
 	"github.com/jenkins-x/lighthouse/pkg/util"
 	"github.com/jenkins-x/lighthouse/pkg/watcher"
 	"github.com/pkg/errors"
@@ -336,7 +337,7 @@ func (c *Controller) syncJob(namespace, name, key string) error {
 	spec := &origJob.Spec
 
 	// Only launch for the appropriate agent types and for triggered state
-	if origJob.Status.State == v1alpha1.TriggeredState && (spec.Agent == config.JenkinsXAgent || spec.Agent == config.LegacyDefaultAgent) {
+	if origJob.Status.State == v1alpha1.TriggeredState && (spec.Agent == job.JenkinsXAgent || spec.Agent == job.LegacyDefaultAgent) {
 		jobName := spec.Refs.Repo
 		owner := spec.Refs.Org
 		sourceURL := spec.Refs.CloneURI
