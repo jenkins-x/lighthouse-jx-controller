@@ -879,8 +879,8 @@ github.com/jenkins-x/lighthouse v0.0.760 h1:P9k835e4OvhehpDxov+QT9ST/RnXeN1CJpat
 github.com/jenkins-x/lighthouse v0.0.760/go.mod h1:o/guKqwZqKpvwVluakgdudHZtsl/XzUQ9jexiSKykxc=
 github.com/jenkins-x/lighthouse v0.0.764 h1:DFTc9rCSXB2JlesUOSN6yeouiiYzadplXRsNm3Mkkik=
 github.com/jenkins-x/lighthouse v0.0.764/go.mod h1:o/guKqwZqKpvwVluakgdudHZtsl/XzUQ9jexiSKykxc=
-github.com/jenkins-x/lighthouse v0.0.766 h1:F2VAW+I2L8nArJoVRvXrwvm0AT+T2VptiBBXx7gHqQQ=
-github.com/jenkins-x/lighthouse v0.0.766/go.mod h1:o/guKqwZqKpvwVluakgdudHZtsl/XzUQ9jexiSKykxc=
+github.com/jenkins-x/lighthouse v0.0.767 h1:6ksVjnW2D9ZlgoVJ+tdmtJ/iPlPAXlgQdDC0jjfPN10=
+github.com/jenkins-x/lighthouse v0.0.767/go.mod h1:o/guKqwZqKpvwVluakgdudHZtsl/XzUQ9jexiSKykxc=
 github.com/jenkins-x/logrus-stackdriver-formatter v0.1.1-0.20200408213659-1dcf20c371bb h1:woC0LbYpL9rgwZn13Z0KQBEGAmi9ugpWgWtQezHqsBM=
 github.com/jenkins-x/logrus-stackdriver-formatter v0.1.1-0.20200408213659-1dcf20c371bb/go.mod h1:Erk5rrGYkvFlFAoVbz/7obMDEIUFCEbhK1odoR0Msqo=
 github.com/jenkins-x/logrus-stackdriver-formatter v0.2.3 h1:NuRWKUPCEX1wKlXA8ZYSG28qGKd41R7BK11YDQkPwqo=
