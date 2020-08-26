@@ -3,26 +3,20 @@ package main
 import (
 	"flag"
 	"os"
-	"os/signal"
-	"syscall"
-	"time"
 
-	jxclient "github.com/jenkins-x/jx-api/pkg/client/clientset/versioned"
-	jxinformers "github.com/jenkins-x/jx-api/pkg/client/informers/externalversions"
-	"github.com/jenkins-x/lighthouse-jx-controller/pkg/engines/jx"
-	clientset "github.com/jenkins-x/lighthouse/pkg/client/clientset/versioned"
-	lhinformers "github.com/jenkins-x/lighthouse/pkg/client/informers/externalversions"
+	jxv1 "github.com/jenkins-x/jx-api/pkg/apis/jenkins.io/v1"
+	jxengine "github.com/jenkins-x/lighthouse-jx-controller/pkg/engines/jx"
+	lighthousev1alpha1 "github.com/jenkins-x/lighthouse/pkg/apis/lighthouse/v1alpha1"
 	"github.com/jenkins-x/lighthouse/pkg/clients"
 	"github.com/jenkins-x/lighthouse/pkg/interrupts"
 	"github.com/jenkins-x/lighthouse/pkg/logrusutil"
 	"github.com/sirupsen/logrus"
-	"k8s.io/client-go/kubernetes"
+	"k8s.io/apimachinery/pkg/runtime"
+	ctrl "sigs.k8s.io/controller-runtime"
 )
 
 type options struct {
 	namespace string
-
-	dryRun bool
 }
 
 func (o *options) Validate() error {
@@ -31,7 +25,6 @@ func (o *options) Validate() error {
 
 func gatherOptions(fs *flag.FlagSet, args ...string) options {
 	var o options
-	fs.BoolVar(&o.dryRun, "dry-run", true, "Whether to mutate any real-world state.")
 	fs.StringVar(&o.namespace, "namespace", "", "The namespace to listen in")
 
 	err := fs.Parse(args)
@@ -42,28 +35,16 @@ func gatherOptions(fs *flag.FlagSet, args ...string) options {
 	return o
 }
 
-// stopper returns a channel that remains open until an interrupt is received.
-func stopper() chan struct{} {
-	stop := make(chan struct{})
-	c := make(chan os.Signal, 2)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<-c
-		logrus.Warn("Interrupt received, attempting clean shutdown...")
-		close(stop)
-		<-c
-		logrus.Error("Second interrupt received, force exiting...")
-		os.Exit(1)
-	}()
-	return stop
-}
-
 func main() {
 	logrusutil.ComponentInit("lighthouse-jx-controller")
 
-	defer interrupts.WaitForGracefulShutdown()
-
-	stopCh := stopper()
+	scheme := runtime.NewScheme()
+	if err := lighthousev1alpha1.AddToScheme(scheme); err != nil {
+		logrus.WithError(err).Fatal("Failed to register scheme")
+	}
+	if err := jxv1.AddToScheme(scheme); err != nil {
+		logrus.WithError(err).Fatal("Failed to register scheme")
+	}
 
 	o := gatherOptions(flag.NewFlagSet(os.Args[0], flag.ExitOnError), os.Args[1:]...)
 	if err := o.Validate(); err != nil {
@@ -75,38 +56,21 @@ func main() {
 		logrus.WithError(err).Fatal("Could not create kubeconfig")
 	}
 
-	lhClient, err := clientset.NewForConfig(cfg)
+	mgr, err := ctrl.NewManager(cfg, ctrl.Options{Scheme: scheme, Namespace: o.namespace})
 	if err != nil {
-		logrus.WithError(err).Fatal("Could not create Lighthouse API client")
+		logrus.WithError(err).Fatal("Unable to start manager")
 	}
-	kubeClient, err := kubernetes.NewForConfig(cfg)
+
+	reconciler, err := jxengine.NewLighthouseJobReconciler(mgr.GetClient(), mgr.GetScheme(), o.namespace, nil)
 	if err != nil {
-		logrus.WithError(err).Fatal("Could not create Kubernetes API client")
+		logrus.WithError(err).Fatal("Unable to instantiate reconciler")
 	}
-	lhInformerFactory := lhinformers.NewSharedInformerFactoryWithOptions(lhClient, time.Minute*30, lhinformers.WithNamespace(o.namespace))
-
-	jxClient, err := jxclient.NewForConfig(cfg)
-	if err != nil {
-		logrus.WithError(err).Fatal("Could not create Jenkins X API client")
+	if err = reconciler.SetupWithManager(mgr); err != nil {
+		logrus.WithError(err).Fatal("Unable to create controller")
 	}
-	jxInformerFactory := jxinformers.NewSharedInformerFactoryWithOptions(jxClient, time.Minute*30, jxinformers.WithNamespace(o.namespace))
-	paInformer := jxInformerFactory.Jenkins().V1().PipelineActivities()
 
-	controller, err := jx.NewController(kubeClient,
-		jxClient,
-		lhClient,
-		paInformer,
-		lhInformerFactory.Lighthouse().V1alpha1().LighthouseJobs(),
-		o.namespace,
-		nil)
-
-	if err != nil {
-		logrus.WithError(err).Fatal("Error creating controller")
-	}
-	jxInformerFactory.Start(stopCh)
-	lhInformerFactory.Start(stopCh)
-
-	if err = controller.Run(2, stopCh); err != nil {
-		logrus.WithError(err).Fatal("Error running controller")
+	defer interrupts.WaitForGracefulShutdown()
+	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+		logrus.WithError(err).Fatal("Problem running manager")
 	}
 }
