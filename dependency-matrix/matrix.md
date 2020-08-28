@@ -3,6 +3,6 @@
 Dependency | Sources | Version | Mismatched versions
 ---------- | ------- | ------- | -------------------
 [jenkins-x/go-scm](https://github.com/jenkins-x/go-scm) |  | [1.5.149]() | 
-[jenkins-x/jx](https://github.com/jenkins-x/jx) |  | [2.1.133](https://github.com/jenkins-x/jx/releases/tag/v2.1.133) | 
+[jenkins-x/jx](https://github.com/jenkins-x/jx) |  | [2.1.135](https://github.com/jenkins-x/jx/releases/tag/v2.1.135) | 
 [jenkins-x/lighthouse-config](https://github.com/jenkins-x/lighthouse-config) |  | [0.0.9]() | 
-[jenkins-x/lighthouse](https://github.com/jenkins-x/lighthouse) |  | [0.0.777]() | 
+[jenkins-x/lighthouse](https://github.com/jenkins-x/lighthouse) |  | [0.0.779]() | 
