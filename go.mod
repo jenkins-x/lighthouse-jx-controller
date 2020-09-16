@@ -22,13 +22,16 @@ replace (
 	github.com/go-logr/logr => github.com/go-logr/logr v0.1.0
 	github.com/heptio/sonobuoy => github.com/jenkins-x/sonobuoy v0.11.7-0.20190318120422-253758214767
 	github.com/sirupsen/logrus => github.com/jtnord/logrus v1.4.2-0.20190423161236-606ffcaf8f5d
-	gomodules.xyz/jsonpatch/v2 => gomodules.xyz/jsonpatch/v2 v2.0.1
+	// gomodules.xyz breaks in Athens proxying
+	gomodules.xyz/jsonpatch/v2 => github.com/gomodules/jsonpatch/v2 v2.0.1
 	k8s.io/api => k8s.io/api v0.16.5
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.0.0-20190819143637-0dbe462fe92d
 	k8s.io/apimachinery => k8s.io/apimachinery v0.16.5
 	k8s.io/client-go => k8s.io/client-go v0.16.5
 	k8s.io/metrics => k8s.io/metrics v0.0.0-20190819143841-305e1cef1ab1
 	k8s.io/test-infra => github.com/jenkins-x/test-infra v0.0.0-20200611142252-211a92405c22
+	// vbom.ml doesn't actually exist any more
+	vbom.ml/util => github.com/fvbommel/util v0.0.0-20180919145318-efcd4e0f9787
 )
 
 go 1.13
