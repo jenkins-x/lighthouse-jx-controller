@@ -855,6 +855,8 @@ github.com/jenkins-x/go-scm v1.5.170 h1:+vfayc1YqGgAQ5/yS//3RrkqMgaNPWFMJ6kDRxWi
 github.com/jenkins-x/go-scm v1.5.170/go.mod h1:xk/KnuS3rVHKBEASsShBZGABm9cGrwntQffiy3BfTCc=
 github.com/jenkins-x/go-scm v1.5.172 h1:p9gUNYEE444WDUyYaTkaR74NJXkVwH7PnZTu3lT/19M=
 github.com/jenkins-x/go-scm v1.5.172/go.mod h1:xk/KnuS3rVHKBEASsShBZGABm9cGrwntQffiy3BfTCc=
+github.com/jenkins-x/go-scm v1.5.174 h1:CjpFxaDb5S7Vh9NjxoQ1MM2yhGEE7WudfW64sP0hqGI=
+github.com/jenkins-x/go-scm v1.5.174/go.mod h1:xk/KnuS3rVHKBEASsShBZGABm9cGrwntQffiy3BfTCc=
 github.com/jenkins-x/golang-jenkins v0.0.0-20180919102630-65b83ad42314 h1:kyBMx/ucSV92S+umX/V6DDaPNynlFFOM9MGJWApltoU=
 github.com/jenkins-x/golang-jenkins v0.0.0-20180919102630-65b83ad42314/go.mod h1:C6j5HgwlHGjRU27W4XCs6jXksqYFo8OdBu+p44jqQeM=
 github.com/jenkins-x/jx-api v0.0.13 h1:vK77HgVmw17ik/pbOzJKdrd/itBaFPVWI+VVM9jGHGo=
@@ -1035,6 +1037,8 @@ github.com/jenkins-x/lighthouse v0.0.827 h1:TklfiEdWlBZZTACQBze8Mk0maVDWJ2U6ClqA
 github.com/jenkins-x/lighthouse v0.0.827/go.mod h1:PDdUKNyQjbPlu1uA/IbvRgm0QXgU9wkHV+DpwWipKkE=
 github.com/jenkins-x/lighthouse v0.0.829 h1:BJZ7Ram+lcLhJKg5LRcPDk24r9wohTVfJexVcHKHhW0=
 github.com/jenkins-x/lighthouse v0.0.829/go.mod h1:sxB4NxVH9sA1Ey3RJSJKaXWnfVPfL8C9Yr2WSl184sY=
+github.com/jenkins-x/lighthouse v0.0.830 h1:lwc6h5Us3f+/iMqeje8UihOJXnMmHbz0AkmTYjQz4Cw=
+github.com/jenkins-x/lighthouse v0.0.830/go.mod h1:rrNYZSIibKlHKuzE7m+6wq+KM9+9/pW44LMHAWgY7rw=
 github.com/jenkins-x/logrus-stackdriver-formatter v0.1.1-0.20200408213659-1dcf20c371bb h1:woC0LbYpL9rgwZn13Z0KQBEGAmi9ugpWgWtQezHqsBM=
 github.com/jenkins-x/logrus-stackdriver-formatter v0.1.1-0.20200408213659-1dcf20c371bb/go.mod h1:Erk5rrGYkvFlFAoVbz/7obMDEIUFCEbhK1odoR0Msqo=
 github.com/jenkins-x/logrus-stackdriver-formatter v0.2.3 h1:NuRWKUPCEX1wKlXA8ZYSG28qGKd41R7BK11YDQkPwqo=
