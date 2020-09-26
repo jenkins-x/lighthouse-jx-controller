@@ -897,6 +897,8 @@ github.com/jenkins-x/jx/v2 v2.1.148 h1:mlFY4VVMQOEhu/F1ShpAI8C2ywTe6Fuq2Y5R/JHBZ
 github.com/jenkins-x/jx/v2 v2.1.148/go.mod h1:6cqNADzkHPJzBAtxWRPaAENY0lZJa+Xcf9BDoYnpzUk=
 github.com/jenkins-x/jx/v2 v2.1.149 h1:Tq+LsB2ofJfP8JiNwRe7GL0lybZnAs9DHitPEe+HPOM=
 github.com/jenkins-x/jx/v2 v2.1.149/go.mod h1:6cqNADzkHPJzBAtxWRPaAENY0lZJa+Xcf9BDoYnpzUk=
+github.com/jenkins-x/jx/v2 v2.1.150 h1:f20ik6CUHB6ZrbVPNQrwGlE7sV0S7e+EzwkhIfq+2dw=
+github.com/jenkins-x/jx/v2 v2.1.150/go.mod h1:6cqNADzkHPJzBAtxWRPaAENY0lZJa+Xcf9BDoYnpzUk=
 github.com/jenkins-x/lighthouse v0.0.707 h1:TCzvd+kFhNfCwBBvFfPYjGInC4AA1VKW+EYazKfTODg=
 github.com/jenkins-x/lighthouse v0.0.707/go.mod h1:tYg7UU3MAP0NWZVZN66gYLfGcZNItQt8G4ZZwPvmEsY=
 github.com/jenkins-x/lighthouse v0.0.728 h1:P5UoCmTEw5VqzYMfpMJbdOn7fMBLbOif0DEpUtIxHFc=
