@@ -3,7 +3,7 @@ module github.com/jenkins-x/lighthouse-jx-controller
 require (
 	github.com/google/go-cmp v0.4.1
 	github.com/jenkins-x/jx-api v0.0.13
-	github.com/jenkins-x/jx/v2 v2.1.149
+	github.com/jenkins-x/jx/v2 v2.1.150
 	github.com/jenkins-x/lighthouse v0.0.831
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.6.0
